@@ -1,10 +1,10 @@
 use crate::schemes::scheme::Scheme;
-use crate::math::statistics::sample_discrete_gaussian_ring_element; 
+use crate::math::discrete_gaussian::sample_discrete_gaussian_ring_element; 
 
 pub struct BFV{
     d: usize, 
-    n: usize, 
-    s: f64, 
+    n: usize,
+    s: f64, // sigma 
 }
 
 impl Scheme for BFV{
@@ -36,7 +36,9 @@ impl Scheme for BFV{
 }
 
 impl BFV{
-    pub fn new() -> BFV{
+    pub fn new(d: usize) -> BFV{
+        assert!( (d as f64).log2() - (d as f64).log2().trunc() == 0.0); // d must be a power of two 
+        
         BFV{d: 16, s: 2.3, n:64}
     }
 }

@@ -1,7 +1,8 @@
+use pyo3::pyfunction;
 use rand::Rng; 
 use std::f64::consts::PI; 
 
-pub fn rho_s(x: u64, s: f64) -> f64{
+fn rho_s(x: u64, s: f64) -> f64{
     (-PI * (x as f64).powi(2) / s.powi(2)).exp()
 }
 
