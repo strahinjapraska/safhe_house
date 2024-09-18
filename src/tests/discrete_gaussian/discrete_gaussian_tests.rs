@@ -4,12 +4,12 @@ use crate::math::discrete_gaussian::sample_z;
 
 
 #[pyfunction]
-fn sample_discrete_gaussian() -> u64{
-    sample_z(2.3, 64)
+fn sample_discrete_gaussian(s: f64, n: usize) -> i64{
+    sample_z(s, n)
 }
 
 #[pymodule]
-fn sample_discrete_gaussian_binding(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn safhe_house(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sample_discrete_gaussian, m)?)?;
     Ok(())
 }

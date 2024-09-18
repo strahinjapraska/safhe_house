@@ -7,7 +7,14 @@ edition = "2021"
 rand = "0.8"
 pyo3 = {version = "0.22.2", features = ["extension-module"] } 
 num = "0.4.3"
+num-bigint = "0.4"
+num-traits = "0.2"
+rayon = "1.10.0"
 
 [[test]]
 name = "bfv_tests" 
 path = "src/tests/bfv_tests.rs" 
+
+[[test]]
+name = "math_tests" 
+path = "src/tests/math_tests.rs"
