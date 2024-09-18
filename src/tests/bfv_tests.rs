@@ -1,12 +1,14 @@
 #[cfg(test)]
 mod bfv_tests{
-    use safhe_house::schemes::bfv::{bfv::BFV, plaintext::Plaintext};
+    use safhe_house::{math::{ring::QuotientRing, util::random_uniform_vector}, schemes::bfv::{bfv::BFV, plaintext::Plaintext}};
 
 
 
     #[test]
     fn encryption_equation_test(){
-        let message = vec![0, 1, 1, 0];
+
+        let message = random_uniform_vector(1024, 512);
+        
         let (sk, pk) = BFV::gen_keys();
 
         let c = pk.encrypt(&Plaintext{message: message.clone()});
@@ -18,9 +20,13 @@ mod bfv_tests{
 
     #[test]
     fn homomorphic_add(){
-        let m1 = vec![0, 1, 0, 0]; 
+        let ring = QuotientRing{n: 1024, p: 1024};
 
-        let m2 = vec![0, 0, 0, 1]; 
+        let m1 = random_uniform_vector(1024, 512);
+        let m2 = random_uniform_vector(1024, 512);
+
+        let clear_res = ring.add(&m1, &m2);
+
 
         let (sk, pk) = BFV::gen_keys(); 
 
@@ -31,6 +37,6 @@ mod bfv_tests{
 
         let decrypted_res = sk.decrypt(&encrypted_res); 
 
-        assert_eq!(vec![0, 1, 0, 1], decrypted_res.message);
+        assert_eq!(clear_res, decrypted_res.message);
     }
 }

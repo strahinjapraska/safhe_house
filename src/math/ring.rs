@@ -3,7 +3,7 @@ use rayon::prelude::*;
 
 use crate::math::{fft::{fft, ifft}, finite_field::{inv_mod, mod_pow, reduce,modulo}};
 
-use super::finite_field::{primitive_nth_root_of_unity, square_root_mod_p};
+use super::{discrete_gaussian::sample_z, finite_field::{primitive_nth_root_of_unity, square_root_mod_p}, util::random_binary_vector};
 
 fn _precompute_values(){
     panic!("Not implemented")
@@ -86,17 +86,27 @@ impl QuotientRing{
         }).collect()
     } 
 
-    pub fn random_element(&self) -> Vec<i64> {
+    pub fn uniform_random_element(&self) -> Vec<i64> {
         // Uniformly sample a random element from Rq
         let mut rng = rand::thread_rng(); 
         let mut polynomial:Vec<i64> = Vec::with_capacity(self.n); 
 
+        let half_p = self.p/2; 
         for _ in 0..self.n{
-            polynomial.push(rng.gen_range(0..self.p)); 
+            polynomial.push(rng.gen_range(-half_p..=half_p)); 
         }
 
         polynomial
 
+    }
+
+    pub fn binary_random_element(&self) -> Vec<i64> {
+        // Sample from R2 
+        random_binary_vector(self.n)
+    }
+
+    pub fn discrete_gaussian_random_element(&self, sigma: f64) -> Vec<i64>{
+        (0..self.n).map(|_| sample_z(sigma, self.n)).collect()
     }
 
     pub fn scalar_mul(&self, s: i64, a: &Vec<i64>) -> Vec<i64>{
@@ -106,13 +116,26 @@ impl QuotientRing{
             modulo((*a_val)*s, self.p)
         }).collect()
     }
+
+    pub fn scalar_mul_no_mod(&self, s: i64, a: &Vec<i64>) -> Vec<i64>{
+        a
+        .par_iter()
+        .map(|a_val|{ 
+            (*a_val)*s
+        }).collect()
+    }
     
 
     pub fn scalar_div(&self, s: i64, a: &Vec<i64>) -> Vec<i64>{
         a
         .par_iter()
         .map(|a_val|{ 
-            modulo(((*a_val) as f64 /s as f64).round() as i64, self.p)
+            let val = *a_val;
+            let val_f = val as f64; 
+            let s_f = s as f64; 
+            let res = ((val_f / s_f).round()) as i64;
+            modulo(res,self.p)
         }).collect()
     }
+
 }

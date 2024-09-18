@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, Mul};
 
 use crate::math::ring::QuotientRing;
 
@@ -18,5 +18,13 @@ impl Add for Ciphertext{
       ); 
 
       Ciphertext{c0, c1, ring: self.ring.clone()}
+   }
+}
+
+impl Mul for Ciphertext{
+   type Output = Ciphertext;
+
+   fn mul(self, _rhs: Self) -> Self::Output {
+      panic!("Not implemented");
    }
 }

@@ -13,6 +13,7 @@ pub mod math{
     pub mod fft;  
     pub mod finite_field; 
     pub mod ring;  
+    pub mod util; 
 }
 
 pub mod tests{

@@ -34,25 +34,26 @@ pub fn mod_pow(g: i64,k: i64, p: i64) -> i64{
 }
 
 
-pub fn modulo(a: i64, p: i64) -> i64{
-    assert!(p > 1); 
+pub fn modulo(a: i64, p: i64) -> i64 {
+    assert!(p > 1);
 
-    let rem = reduce(a, p);
+    let mut rem = reduce(a, p);
 
-    if rem > p/2{
-        rem - p 
+    if rem > p / 2 {
+        rem -= p;
+    } else if rem <= -p / 2 {
+        rem += p;
     }
-    else{
-        rem 
-    }
+
+    rem
 }
 
-pub fn reduce(a: i64, p: i64) -> i64{
-
-    // Barret Reduction 
-    let q = a/p; 
-    a - q*p
-
+pub fn reduce(a: i64, p: i64) -> i64 {
+    let mut rem = a % p;
+    if rem < 0 {
+        rem += p;
+    }
+    rem
 }
 
 pub fn square_root_mod_p(n: i64 , p: i64) -> i64{

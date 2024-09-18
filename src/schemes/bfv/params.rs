@@ -11,10 +11,10 @@ pub struct Params{
 impl Params{
     pub fn new() -> Params{
         Params{
-            s: 1.0,
-            n: 4, 
-            p: 211, 
-            t: 2}
+            s: 8.0,
+            n: 1024, 
+            p: 1061093377, 
+            t: 1024}
     }
 
     

@@ -16,9 +16,8 @@ mod math_tests{
 
     #[test]
     fn primitive_nth_root_of_unity_test(){
-        let w = primitive_nth_root_of_unity(2<<16, 4);
-        println!("{}", w)
-        //assert!(w == 3383 || w == 4298 || w == 7680)
+        let w = primitive_nth_root_of_unity(7681, 4);
+        assert!(w == 3383 || w == 4298 || w == 7680)
     }
 
     #[test]
@@ -38,6 +37,7 @@ mod math_tests{
 
         assert_eq!(ring.mul(&mut g, &mut h), vec![-56, -36, 2, 60]);
     } 
+
 
     #[test]
     fn fft_test(){

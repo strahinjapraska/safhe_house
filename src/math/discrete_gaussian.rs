@@ -2,7 +2,7 @@ use rand::Rng;
 use std::f64::consts::PI; 
 
 fn rho_s(x: i64, s: f64) -> f64{
-    (-PI * (x as f64).powi(2) / s.powi(2)).exp()
+    ((-PI*(x as f64).powf(2.0))/s.powf(2.0)).exp()
 }
 
 pub fn sample_z(s: f64, n: usize) -> i64{
@@ -22,8 +22,4 @@ pub fn sample_z(s: f64, n: usize) -> i64{
             return x;  
         }
     }
-}
-
-pub fn sample_discrete_gaussian_ring_element(n: usize, s: f64) -> Vec<i64>{
-    (0..n).map(|_| sample_z(s, n)).collect()
 }
