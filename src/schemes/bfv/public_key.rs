@@ -39,6 +39,6 @@ impl PublicKey{
         ));
         let c1 =  self.ring.add(&e2, &self.ring.mul(&p1, &u)); 
         
-        Ciphertext{c0, c1, ring: self.ring.clone()}
+        Ciphertext{c0, c1, ring: self.ring.clone(), params: self.params.clone()}
     }
 }

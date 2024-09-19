@@ -130,11 +130,12 @@ impl QuotientRing{
         a
         .par_iter()
         .map(|a_val|{ 
-            let val = *a_val;
-            let val_f = val as f64; 
-            let s_f = s as f64; 
-            let res = ((val_f / s_f).round()) as i64;
-            modulo(res,self.p)
+            modulo(
+                ((
+                    ((*a_val) as f64)/
+                    (s as f64)
+                    ).round()) as i64,
+                self.p)
         }).collect()
     }
 
