@@ -108,5 +108,7 @@ impl QuotientRing{
         }).collect()
     }
 
+    
+
    
 }

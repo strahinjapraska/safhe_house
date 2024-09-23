@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod math_tests{
-    use safhe_house::math::finite_field::{inv_mod, mod_pow, primitive_nth_root_of_unity, square_root_mod_p};
+    use safhe_house::math::finite_field::{inv_mod, mod_pow, pow, primitive_nth_root_of_unity, square_root_mod_p};
 
 
    
@@ -23,6 +23,11 @@ mod math_tests{
     #[test]
     fn inv_mod_test(){
        assert_eq!(inv_mod(3, 11),4)
+    }
+
+    #[test]
+    fn pow_test(){
+        assert_eq!(pow(9, 3), 9*9*9);
     }
 
 }

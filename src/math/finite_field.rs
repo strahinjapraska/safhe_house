@@ -33,6 +33,24 @@ pub fn mod_pow(g: i128,k: i128, p: i128) -> i128{
     r0
 }
 
+pub fn pow(g: i128,k: i128) -> i128{
+    // Montgomery-Ladder pow 
+    let mut r0 = 1i128;
+    let mut r1 = g; 
+
+    let k_bin = format!("{:b}", k); 
+    for b in k_bin.chars(){
+        if b == '0' {
+            r1 = r1*r0;
+            r0 = r0*r0
+        }else{
+            r0 = r0*r1;
+            r1 = r1*r1; 
+        }
+    }
+    r0
+}
+
 
 pub fn modulo(a: i128, p: i128) -> i128 {
     assert!(p > 1);

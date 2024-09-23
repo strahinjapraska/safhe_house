@@ -1,6 +1,6 @@
 
 
-use crate::math::ring::ring::QuotientRing;
+use crate::math::{finite_field::pow, ring::ring::QuotientRing};
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext, secret_key::SecretKey};
 use rayon::prelude::*; 
 
@@ -66,7 +66,6 @@ impl PublicKey{
     }
 
     fn relin(&self, c0: &Vec<i128>, c1: &Vec<i128> , c2: &Vec<i128>) -> Ciphertext{
-        return Ciphertext{c0: c0.clone(), c1: c1.clone()};
         let l = (self.params.p as f64).log(self.params.t as f64) as usize; 
        
         let mut decomposition: Vec<Vec<i128>> = vec![Vec::new(); l+1];
@@ -100,9 +99,9 @@ fn gen_rlk(ring: &QuotientRing, params: &Params, secret_key: &SecretKey) -> Vec<
     for i in 0..=l{
         let a_i = ring.uniform_random_element();
         let e_i = ring.discrete_gaussian_random_element(params.s); 
-        // we consider T to be power of two 
+    
         rlk.push(
-            (ring.add(&ring.neg(&ring.add(&ring.mul(&a_i, &secret_key.secret), &e_i)), &ring.scalar_mul(params.t<<i, &s_squared)), 
+            (ring.add(&ring.neg(&ring.add(&ring.mul(&a_i, &secret_key.secret), &e_i)), &ring.scalar_mul(pow(params.t,i), &s_squared)), 
             a_i)
         )
     }

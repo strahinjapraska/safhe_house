@@ -20,7 +20,7 @@ mod bfv_tests{
 
 
     #[test]
-    fn homomorphic_add(){
+    fn homomorphic_add_test(){
         let m1 = vec![5; 1024];
         let m2 = vec![19; 1024];
 
@@ -39,7 +39,7 @@ mod bfv_tests{
     }
 
     #[test]
-    fn homomorphic_mul(){
+    fn homomorphic_mul_test(){
 
         let m1 = vec![5;1024]; 
         let m2 = vec![5;1024];
