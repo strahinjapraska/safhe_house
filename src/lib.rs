@@ -12,8 +12,13 @@ pub mod math{
     pub mod discrete_gaussian;
     pub mod fft;  
     pub mod finite_field; 
-    pub mod ring;  
+    pub mod ring{
+        pub mod ring;  
+        pub mod ring_rand;
+        pub mod ring_no_mod; 
+    }
     pub mod util; 
+    pub mod karatsuba; 
 }
 
 pub mod tests{

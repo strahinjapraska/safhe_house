@@ -1,3 +1,3 @@
 pub struct Plaintext{
-    pub message: Vec<i64>
+    pub message: Vec<i128>
 }

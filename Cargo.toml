@@ -17,4 +17,16 @@ path = "src/tests/bfv_tests.rs"
 
 [[test]]
 name = "math_tests" 
-path = "src/tests/math_tests.rs"
+path = "src/tests/finite_field_tests.rs"
+
+[[test]]
+name = "fft_tests" 
+path = "src/tests/fft_tests.rs"
+
+[[test]]
+name = "ring_tests" 
+path = "src/tests/ring_tests.rs"
+
+[[test]]
+name = "karatsuba_tests" 
+path = "src/tests/karatsuba_tests.rs"

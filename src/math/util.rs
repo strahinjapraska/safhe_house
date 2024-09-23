@@ -1,6 +1,6 @@
 use rand::Rng;
 
-pub fn random_binary_vector(n: usize) -> Vec<i64>{
+pub fn random_binary_vector(n: usize) -> Vec<i128>{
 
     let mut rng = rand::thread_rng(); 
 
@@ -10,7 +10,7 @@ pub fn random_binary_vector(n: usize) -> Vec<i64>{
 
 }
 
-pub fn random_uniform_vector(n: usize, p: i64) -> Vec<i64>{
+pub fn random_uniform_vector(n: usize, p: i128) -> Vec<i128>{
 
     let mut rng = rand::thread_rng(); 
 

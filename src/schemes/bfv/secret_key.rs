@@ -1,9 +1,9 @@
-use crate::math::ring::QuotientRing;
+use crate::math::ring::ring::QuotientRing;
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext};
 
 pub struct SecretKey{
-    pub(crate) secret: Vec<i64>,  
+    pub(crate) secret: Vec<i128>,  
     params: Params, 
     ring: QuotientRing, 
 }

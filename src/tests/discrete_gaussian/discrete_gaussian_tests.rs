@@ -4,7 +4,7 @@ use crate::math::discrete_gaussian::sample_z;
 
 
 #[pyfunction]
-fn sample_discrete_gaussian(s: f64, n: usize) -> i64{
+fn sample_discrete_gaussian(s: f64, n: usize) -> i128{
     sample_z(s, n)
 }
 

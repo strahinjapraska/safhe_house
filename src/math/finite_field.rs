@@ -1,23 +1,23 @@
-pub fn primitive_nth_root_of_unity(p: i64, n: usize) -> i64{
+pub fn primitive_nth_root_of_unity(p: i128, n: usize) -> i128{
     
     let mut x = 1; 
     loop{ 
-        let g = mod_pow(x, (p-1)/n as i64, p); 
+        let g = mod_pow(x, (p-1)/n as i128, p); 
 
-        if mod_pow(g as i64, (n/2) as i64, p) != 1i64{
+        if mod_pow(g as i128, (n/2) as i128, p) != 1i128{
             return g; 
         }
         x+=1; 
     }
 }
 
-pub fn legrende_symbol(a: i64, p: i64) -> i64{
+pub fn legrende_symbol(a: i128, p: i128) -> i128{
     mod_pow(a, (p-1)/2, p)
 }
 
-pub fn mod_pow(g: i64,k: i64, p: i64) -> i64{
+pub fn mod_pow(g: i128,k: i128, p: i128) -> i128{
     // Montgomery-Ladder modpow 
-    let mut r0 = 1i64;
+    let mut r0 = 1i128;
     let mut r1 = g; 
 
     let k_bin = format!("{:b}", k); 
@@ -34,7 +34,7 @@ pub fn mod_pow(g: i64,k: i64, p: i64) -> i64{
 }
 
 
-pub fn modulo(a: i64, p: i64) -> i64 {
+pub fn modulo(a: i128, p: i128) -> i128 {
     assert!(p > 1);
 
     let mut rem = reduce(a, p);
@@ -48,7 +48,7 @@ pub fn modulo(a: i64, p: i64) -> i64 {
     rem
 }
 
-pub fn reduce(a: i64, p: i64) -> i64 {
+pub fn reduce(a: i128, p: i128) -> i128 {
     let mut rem = a % p;
     if rem < 0 {
         rem += p;
@@ -56,11 +56,11 @@ pub fn reduce(a: i64, p: i64) -> i64 {
     rem
 }
 
-pub fn square_root_mod_p(n: i64 , p: i64) -> i64{
+pub fn square_root_mod_p(n: i128 , p: i128) -> i128{
     // Tonelli-Shanks algorithm 
 
     // Euler's cirterion 
-    assert!(mod_pow(n, (p-1)/2, p) == 1i64);
+    assert!(mod_pow(n, (p-1)/2, p) == 1i128);
 
     let mut q = (p-1)/2; 
     let mut s = 1; 
@@ -102,6 +102,6 @@ pub fn square_root_mod_p(n: i64 , p: i64) -> i64{
     r 
 }
 
-pub fn inv_mod(a: i64, p: i64) -> i64{
+pub fn inv_mod(a: i128, p: i128) -> i128{
     mod_pow(a, p-2, p)
 }

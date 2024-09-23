@@ -4,8 +4,8 @@
 pub struct Params{
     pub (crate) s: f64, 
     pub (crate) n: usize, 
-    pub (crate) p: i64,  
-    pub (crate) t: i64,   
+    pub (crate) p: i128,  
+    pub (crate) t: i128,   
 }
 
 impl Params{
@@ -16,6 +16,4 @@ impl Params{
             p: 1061093377, 
             t: 1024}
     }
-
-    
 }
