@@ -1,32 +1,31 @@
-use rand::Rng;
+use num_bigint::{BigInt, RandBigInt};
+use rand::thread_rng;
+
 
 use crate::math::{discrete_gaussian::sample_z, util::random_binary_vector};
 
-use super::ring::QuotientRing;
 
 
-impl QuotientRing{
-    pub fn uniform_random_element(&self) -> Vec<i128> {
-        // Uniformly sample a random element from Rq
-        let mut rng = rand::thread_rng(); 
-        let mut polynomial:Vec<i128> = Vec::with_capacity(self.n); 
+pub fn uniform_random_element(p: &BigInt, n: usize) -> Vec<BigInt> {
+    // Uniformly sample a random element from Rq
+    let mut rng = thread_rng(); 
+    let mut polynomial:Vec<BigInt> = Vec::with_capacity(n); 
 
-        let half_p = self.p/2; 
-        for _ in 0..self.n{
-            polynomial.push(rng.gen_range(-half_p..=half_p)); 
-        }
-
-        polynomial
-
+    let half_p = p/2; 
+    let lower_bound = -&half_p; 
+    let upper_bound = &half_p + 1u32;
+    for _ in 0..n{
+        polynomial.push(rng.gen_bigint_range(&lower_bound, &upper_bound)); 
     }
 
-    pub fn binary_random_element(&self) -> Vec<i128> {
-        // Sample from R2 
-        random_binary_vector(self.n)
-    }
+    polynomial
+}
 
-    pub fn discrete_gaussian_random_element(&self, sigma: f64) -> Vec<i128>{
-        (0..self.n).map(|_| sample_z(sigma, self.n)).collect()
-    }
+pub fn binary_random_element(n: usize) -> Vec<BigInt> {
+    // Sample from R2 
+    random_binary_vector(n)
+}
 
+pub fn discrete_gaussian_random_element(sigma: f64, n: usize) -> Vec<BigInt>{
+    (0..n).map(|_| BigInt::from(sample_z(sigma, n))).collect()
 }

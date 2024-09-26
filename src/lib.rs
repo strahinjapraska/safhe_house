@@ -2,6 +2,7 @@ pub mod schemes{
     pub mod bfv{
         pub mod bfv; 
         pub mod public_key; 
+        pub mod relinearisation;
         pub mod secret_key;
         pub mod params; 
         pub mod ciphertext;

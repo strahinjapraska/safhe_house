@@ -1,59 +1,25 @@
-pub fn primitive_nth_root_of_unity(p: i128, n: usize) -> i128{
-    
-    let mut x = 1; 
-    loop{ 
-        let g = mod_pow(x, (p-1)/n as i128, p); 
+use num_bigint::BigInt;
 
-        if mod_pow(g as i128, (n/2) as i128, p) != 1i128{
-            return g; 
+
+pub fn primitive_nth_root_of_unity(p: &BigInt, n: usize) -> BigInt{
+    
+    let mut x = BigInt::from(1i32); 
+    let exponent = (p- BigInt::from(1i32))/n; 
+
+    loop{ 
+        
+        let g = x.modpow(&exponent, &p);
+
+        if g.modpow(&BigInt::from(n/2), &p) != BigInt::from(1i32){
+            return g;
         }
         x+=1; 
     }
 }
 
-pub fn legrende_symbol(a: i128, p: i128) -> i128{
-    mod_pow(a, (p-1)/2, p)
-}
 
-pub fn mod_pow(g: i128,k: i128, p: i128) -> i128{
-    // Montgomery-Ladder modpow 
-    let mut r0 = 1i128;
-    let mut r1 = g; 
-
-    let k_bin = format!("{:b}", k); 
-    for b in k_bin.chars(){
-        if b == '0' {
-            r1 = reduce(r1*r0, p);
-            r0 = reduce(r0*r0, p);
-        }else{
-            r0 = reduce(r0*r1, p);
-            r1 = reduce(r1*r1, p); 
-        }
-    }
-    r0
-}
-
-pub fn pow(g: i128,k: i128) -> i128{
-    // Montgomery-Ladder pow 
-    let mut r0 = 1i128;
-    let mut r1 = g; 
-
-    let k_bin = format!("{:b}", k); 
-    for b in k_bin.chars(){
-        if b == '0' {
-            r1 = r1*r0;
-            r0 = r0*r0
-        }else{
-            r0 = r0*r1;
-            r1 = r1*r1; 
-        }
-    }
-    r0
-}
-
-
-pub fn modulo(a: i128, p: i128) -> i128 {
-    assert!(p > 1);
+pub fn modulo(a: &BigInt, p: &BigInt) -> BigInt{
+    assert!(*p > BigInt::from(1i32));
 
     let mut rem = reduce(a, p);
 
@@ -66,60 +32,60 @@ pub fn modulo(a: i128, p: i128) -> i128 {
     rem
 }
 
-pub fn reduce(a: i128, p: i128) -> i128 {
-    let mut rem = a % p;
-    if rem < 0 {
-        rem += p;
-    }
-    rem
+pub fn reduce(a: &BigInt, p: &BigInt) -> BigInt{
+    a.modpow(&BigInt::from(1i32), &p)
 }
 
-pub fn square_root_mod_p(n: i128 , p: i128) -> i128{
+pub fn square_root_mod_p(n: &BigInt , p: &BigInt) -> BigInt{
     // Tonelli-Shanks algorithm 
 
-    // Euler's cirterion 
-    assert!(mod_pow(n, (p-1)/2, p) == 1i128);
 
-    let mut q = (p-1)/2; 
+    // Euler's cirterion 
+    assert!(legrende_symbol(n, p) == BigInt::from(1i32)); 
+
+    let mut q = (p - BigInt::from(1i32))/BigInt::from(2i32); 
     let mut s = 1; 
-    while q%2 == 0{
-        q /=2; 
+    while &q%2 == BigInt::from(0i32){
+        q/=BigInt::from(2i32); 
         s+=1; 
     }
 
-    let mut z = 2; 
+    let mut z = BigInt::from(2i32); 
 
-    while legrende_symbol(z, p ) != p-1{
+    while legrende_symbol(&z, p) != p-1{
         z+=1; 
     }
 
     let mut m = s; 
-    let mut c = mod_pow(z, q, p); 
-    let mut t = mod_pow(n, q, p); 
-    let mut r = mod_pow(n, (q+1)/2, p); 
+    let mut c = z.modpow(&q, p);
+    let mut t = n.modpow(&q, p);
+    let mut r = n.modpow(&((q+1)/2), p);
 
     let mut t2; 
-    while reduce(t-1, p) != 0{
-        t2 = reduce(t*t, p); 
+    while reduce(&(&t - BigInt::from(1i32)), p) != BigInt::from(0i32){
+        t2 = reduce(&(&t*&t), p); 
 
         let mut i = 1; 
         while i < m{
-            if reduce(t2-1, p) == 0{
+            if reduce(&(&t2-BigInt::from(1i32)), p) == BigInt::from(0i32){
                 break; 
             }
-            t2 = reduce(t2*t2, p); 
+            t2 = reduce(&(&t2*&t2), p); 
             i+=1; 
         }
-        let b = mod_pow(c, 1<<(m - i - 1), p); 
-        r = reduce(r*b,p); 
-        c = reduce(b*b, p); 
-        t = reduce(t*c, p); 
+    
+    
+        let b = c.modpow(&BigInt::from(2i32).pow(m-i-1), p);
+        r = reduce(&(r*&b),p); 
+        c = reduce(&(&b*&b), p); 
+        t = reduce(&(t*&c), p); 
         m = i; 
     }
 
     r 
 }
 
-pub fn inv_mod(a: i128, p: i128) -> i128{
-    mod_pow(a, p-2, p)
+pub fn legrende_symbol(a: &BigInt, p: &BigInt) -> BigInt{
+    let exponent = (p - BigInt::from(1i32))/2;
+    a.modpow(&exponent, p)
 }

@@ -1,4 +1,6 @@
+use num_bigint::BigInt;
+
 pub struct Ciphertext{
-   pub c0: Vec<i128>,
-   pub c1: Vec<i128>, 
+   pub c0: Vec<BigInt>,
+   pub c1: Vec<BigInt>, 
 } 

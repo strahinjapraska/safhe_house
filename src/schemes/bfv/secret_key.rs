@@ -1,37 +1,35 @@
-use crate::math::ring::ring::QuotientRing;
+use crate::math::ring::{ring::{add, mul, scalar_div}, ring_no_mod::scalar_mul_no_mod, ring_rand::binary_random_element};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext};
-
+use num_bigint::BigInt;
 pub struct SecretKey{
-    pub(crate) secret: Vec<i128>,  
-    params: Params, 
-    ring: QuotientRing, 
+    pub(crate) secret: Vec<BigInt>,  
+    pub (crate) params: Params,  
 }
 
 
 impl SecretKey{
    
-    pub(crate) fn new() -> SecretKey{
-        let params = Params::new(); 
-        let n = params.n; 
-        let p = params.p; 
-        let ring = QuotientRing{n, p}; 
-      
-        let secret = ring.binary_random_element();
+    pub(crate) fn new(params: &Params) -> SecretKey{
+        let secret = binary_random_element(params.n);
         
-        SecretKey{params , secret, ring}
+        SecretKey{params: params.clone() , secret}
     }
 
     pub fn decrypt(&self, ct: &Ciphertext) -> Plaintext{
-        let ring = QuotientRing{n: self.params.n, p: self.params.t};
         let c0 = &ct.c0; 
         let c1 = &ct.c1; 
 
-        
         Plaintext{message: 
-            ring.scalar_div(self.params.p, &ring.scalar_mul_no_mod(self.params.t, &self.ring.add(c0, &self.ring.mul(c1, &self.secret))))
+            scalar_div(&self.params.p, 
+                &scalar_mul_no_mod(&self.params.t, 
+                    &add(c0, 
+                        &mul(c1, &self.secret, &self.params.p), 
+                        &self.params.p)),
+                         &self.params.t)
         }
     }
+
 }
 
 

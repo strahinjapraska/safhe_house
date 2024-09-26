@@ -1,3 +1,5 @@
+use num_bigint::BigInt;
+
 pub struct Plaintext{
-    pub message: Vec<i128>
+    pub message: Vec<BigInt>
 }
