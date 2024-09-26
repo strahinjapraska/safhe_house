@@ -7,6 +7,7 @@ pub mod schemes{
         pub mod params; 
         pub mod ciphertext;
         pub mod plaintext;
+        pub mod ops; 
     }
 }
 pub mod math{
