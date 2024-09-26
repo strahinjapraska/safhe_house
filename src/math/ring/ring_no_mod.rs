@@ -1,4 +1,5 @@
 use crate::math::karatsuba::karatsuba;
+use num::pow;
 use rayon::prelude::*; 
 use num_bigint::BigInt; 
 
@@ -13,15 +14,13 @@ pub fn scalar_mul_no_mod(s: &BigInt, a: &Vec<BigInt>) -> Vec<BigInt>{
 
 
 pub fn mul_no_mod(a: &Vec<BigInt>, b:&Vec<BigInt>, n: usize) -> Vec<BigInt>{
-    let mut res = karatsuba(a, b);
+    let res = karatsuba(a, b);
+    let mut reduced = res[..n].to_vec();
 
     for i in n..res.len() {          
-        let sign = if (i/n) % 2 == 0 { BigInt::from(1) } else { BigInt::from(-1) };
-        let temp = std::mem::take(&mut res[i]);
-        res[i%n] += sign * temp;
+            reduced[i%n] += BigInt::from(pow(-1, i/n))*&res[i];
     }
-    res.truncate(n);
-    res
+    reduced
 }
 
 
