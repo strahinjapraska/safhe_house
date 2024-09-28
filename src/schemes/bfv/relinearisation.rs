@@ -13,14 +13,11 @@ impl PublicKey{
         let n = secret_key.params.n; 
 
 
-        let rp = BigInt::from(1024);
-
-        //let l = (params.p as f64).log(params.relin_param as f64) as BigInt;  
-        let x = 11; 
+        let rp = p.sqrt();
 
         let mut rlk :Vec<(Vec<BigInt>, Vec<BigInt>)> = vec![]; 
       
-        let l = 6;
+        let l = 2;
     
         for i in 0..=l{
             let a_i = uniform_random_element(p, n);
@@ -46,10 +43,10 @@ impl PublicKey{
     }
     pub(crate) fn relin(&self, c0: &Vec<BigInt>, c1: &Vec<BigInt> , c2: &Vec<BigInt>) -> Ciphertext{
         let p = &self.params.p; 
-        let rp = BigInt::from(1024);
-        //let l = (self.params.p as f64).log(self.params.relin_param as f64) as usize;
-        let l = 6; 
-        let x = 12; 
+        let rp = p.sqrt();
+     
+        let l = 2; 
+
 
        
         let mut decomposition: Vec<Vec<BigInt>> = vec![Vec::new(); l+1];

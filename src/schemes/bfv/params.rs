@@ -1,16 +1,16 @@
 use std::collections::HashMap;
 
 use num::Num;
-use num_bigint::BigInt;
 use lazy_static::lazy_static;
+use rug::Integer;
 
 
 #[derive(Clone)]
 pub struct Params{
     pub (crate) s: f64, 
     pub (crate) n: usize, 
-    pub (crate) p: BigInt,  
-    pub (crate) t: BigInt,   
+    pub (crate) p: Integer,  
+    pub (crate) t: Integer,   
 }
 
 pub enum PARAMS{
@@ -27,40 +27,40 @@ lazy_static!{
         let mut m = HashMap::new();
 
         let n = 1024; 
-        let p = BigInt::from(1061093377); 
+        let p = Integer::from(1061093377); 
         m.insert(
             "PARAMS1",
             Params {
                 s: 8.0,
                 n,
                 p,
-                t: BigInt::from(1024),
+                t: Integer::from(1024),
             },
             
         );
 
         let n = 2048; 
-        let p = BigInt::from(144115188076060673u64); 
+        let p = Integer::from(144115188076060673u64); 
         m.insert(
             "PARAMS2", 
             Params { 
                 s: 8.0, 
                 n, 
                 p, 
-                t: BigInt::from(1024), 
+                t: Integer::from(1024), 
             }
         );
     
 
         let n = 8192; 
-        let p = BigInt::from_str_radix("36695977855841144185773134324833391052745039826692497979801421430190766017415756929120296849762010984874789",10).expect("Can't convert"); 
+        let p = Integer::from_str_radix("36695977855841144185773134324833391052745039826692497979801421430190766017415756929120296849762010984874789",10).expect("Can't convert"); 
         m.insert(
             "PARAMS3", 
             Params { 
                 s: 8.0, 
                 n, 
                 p, 
-                t: BigInt::from(1024), 
+                t: Integer::from(1024), 
             }
         );
         m

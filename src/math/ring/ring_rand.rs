@@ -1,31 +1,35 @@
-use num_bigint::{BigInt, RandBigInt};
-use rand::thread_rng;
+use rand::Rng;
+use rug::{ops::NegAssign, rand::RandState, Integer};
 
 
 use crate::math::{discrete_gaussian::sample_z, util::random_binary_vector};
 
 
 
-pub fn uniform_random_element(p: &BigInt, n: usize) -> Vec<BigInt> {
+pub fn uniform_random_element(p: &Integer, n: usize) -> Vec<Integer> {
     // Uniformly sample a random element from Rq
-    let mut rng = thread_rng(); 
-    let mut polynomial:Vec<BigInt> = Vec::with_capacity(n); 
+    let mut rng = RandState::new();
+    let mut rng_bool = rand::thread_rng();
+    let mut polynomial:Vec<Integer> = Vec::with_capacity(n); 
 
-    let half_p = p/2; 
-    let lower_bound = -&half_p; 
-    let upper_bound = &half_p + 1u32;
+    let half_p: Integer = p.clone() / 2;
+ 
     for _ in 0..n{
-        polynomial.push(rng.gen_bigint_range(&lower_bound, &upper_bound)); 
+        let mut r = Integer::from(Integer::random_below(half_p.clone(), &mut rng));
+        if rng_bool.gen_bool(0.5){
+            r.neg_assign();
+        }
+        polynomial.push(r);
     }
 
     polynomial
 }
 
-pub fn binary_random_element(n: usize) -> Vec<BigInt> {
+pub fn binary_random_element(n: usize) -> Vec<Integer> {
     // Sample from R2 
     random_binary_vector(n)
 }
 
-pub fn discrete_gaussian_random_element(sigma: f64, n: usize) -> Vec<BigInt>{
-    (0..n).map(|_| BigInt::from(sample_z(sigma, n))).collect()
+pub fn discrete_gaussian_random_element(sigma: f64, n: usize) -> Vec<Integer>{
+    (0..n).map(|_| Integer::from(sample_z(sigma, n))).collect()
 }

@@ -1,4 +1,4 @@
-use crate::math::ring::{ring::{add, scalar_div}, ring_no_mod::{add_no_mod, mul_no_mod, scalar_mul_no_mod}};
+use crate::math::{ring::{ring::{add, scalar_div}, ring_no_mod::{add_no_mod, mul_no_mod, scalar_mul_no_mod}}, util::scale};
 
 use super::{ciphertext::Ciphertext, public_key::PublicKey};
 use num_bigint::BigInt;
@@ -23,8 +23,3 @@ impl PublicKey{
     }
 }
 
-fn scale(c: &Vec<BigInt>, p: &BigInt, t: &BigInt) -> Vec<BigInt>{
-    scalar_div(p, 
-    &scalar_mul_no_mod(t, &c)
-    ,p)
-}

@@ -10,10 +10,8 @@ num = "0.4.3"
 num-bigint = {version = "0.4.6", features = ["rand"]}
 num-traits = "0.2"
 rayon = "1.10.0"
-phf = { version = "0.11", features = ["macros"] }
 lazy_static = "1.5.0"
 rug = "1.26.1"
-once_cell = "1.17"
 
 [[test]]
 name = "bfv_tests" 
@@ -34,3 +32,6 @@ path = "src/tests/ring_tests.rs"
 [[test]]
 name = "karatsuba_tests" 
 path = "src/tests/karatsuba_tests.rs"
+
+[profile.release]
+debug = true 

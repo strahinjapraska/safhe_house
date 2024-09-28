@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod bfv_tests{
-    use std::time::Instant;
+ 
 
     use safhe_house::schemes::bfv::{bfv::BFV, plaintext::Plaintext};
     use safhe_house::schemes::bfv::params::PARAMS::*;
@@ -14,7 +14,7 @@ mod bfv_tests{
 
         let message = vec![BigInt::from(251); 1024];
 
-        let start = Instant::now(); 
+  
         
         let (sk, pk) = BFV::gen_keys(RlweParams1);
 
@@ -23,7 +23,7 @@ mod bfv_tests{
         
         let res = sk.decrypt(&c);
         
-        println!("{:?}", start.elapsed());
+       
         
         assert_eq!(message, res.message);
     }
@@ -36,13 +36,18 @@ mod bfv_tests{
 
         let clear_res = vec![BigInt::from(428); 1024];
 
+
         let (sk, pk) = BFV::gen_keys(RlweParams1); 
 
+        
+      
         let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
+        
+
         let c2 = pk.encrypt(&Plaintext { message: m2.clone()}); 
 
         let encrypted_res = pk.add(&c1, &c2);
-
+       
         let decrypted_res = sk.decrypt(&encrypted_res); 
 
         assert_eq!(clear_res, decrypted_res.message);
@@ -60,14 +65,15 @@ mod bfv_tests{
         let mut clear_res = vec![BigInt::from(0); n];
         clear_res[0] = BigInt::from(25);
 
-        let start = Instant::now(); 
+      
         let (sk, pk) = BFV::gen_keys(RlweParams2); 
-        println!("{:?}", start.elapsed());
+      
 
         let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
         let c2 = pk.encrypt(&Plaintext{message: m2.clone()}); 
 
         let encrypted_res = pk.mul(&c1, &c2);
+    
 
         let decrypted_res = sk.decrypt(&encrypted_res); 
         

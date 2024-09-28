@@ -1,14 +1,14 @@
-use crate::math::ring::{ring::{add, mul, neg, scalar_div, scalar_mul}, ring_no_mod::{add_no_mod, mul_no_mod, scalar_mul_no_mod}, ring_rand::{binary_random_element, discrete_gaussian_random_element, uniform_random_element}};
+use crate::math::ring::{ring::{add, mul, neg, scalar_mul}, ring_rand::{binary_random_element, discrete_gaussian_random_element, uniform_random_element}};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext, secret_key::SecretKey};
-use num_bigint::*; 
+use rug::Integer;
 
 
 pub struct PublicKey{
-    a: Vec<BigInt>, 
-    b: Vec<BigInt>, 
+    a: Vec<Integer>, 
+    b: Vec<Integer>, 
     pub(crate) params: Params, 
-    pub(crate) rlk: Vec<(Vec<BigInt>, Vec<BigInt>)>
+    pub(crate) rlk: Vec<(Vec<Integer>, Vec<Integer>)>
 }
 
 impl PublicKey{
@@ -18,8 +18,9 @@ impl PublicKey{
         let a = uniform_random_element(&params.p, params.n);
         let e = discrete_gaussian_random_element(params.s, params.n);
         
+      
         let b = neg(&add(&mul(&a, &s.secret, &params.p), &e, &params.p), &params.p); 
-
+      
         let rlk  = PublicKey::gen_rlk(&s);
 
         PublicKey{a, b, params, rlk}
@@ -30,6 +31,8 @@ impl PublicKey{
         let p1 = &self.a; 
 
         let u = binary_random_element(self.params.n); 
+
+        
         let e1 = discrete_gaussian_random_element(self.params.s, self.params.n); 
         let e2 = discrete_gaussian_random_element(self.params.s, self.params.n);  
         

@@ -41,7 +41,8 @@ pub fn ifft(a: &Vec<BigInt> , n: usize, w: &BigInt, p: &BigInt) -> Vec<BigInt>{
     let n_inv = BigInt::from(n).modinv(p).expect("No inverse for n mod p");
     
     fft_output.iter_mut().for_each(|e|{
-        *e = reduce(&(e.clone()* &n_inv),p);
+        *e*= &n_inv; 
+        *e = reduce(e,p);
     });
 
     fft_output

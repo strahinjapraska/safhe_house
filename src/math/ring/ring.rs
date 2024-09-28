@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use num_bigint::BigInt;
 use rayon::prelude::*;
 
@@ -51,7 +53,8 @@ pub fn mul(a: &Vec<BigInt>, b: &Vec<BigInt>, p: &BigInt) -> Vec<BigInt>{
     .enumerate()
     .for_each(|(i, c_val)|{
         let inv_phi_i = inv_phi.modpow(&BigInt::from(i), p);
-        *c_val = modulo(&((*c_val).clone() * inv_phi_i),p);
+        *c_val *= inv_phi_i;
+        *c_val = modulo(c_val, p);    
     });
 
     c
