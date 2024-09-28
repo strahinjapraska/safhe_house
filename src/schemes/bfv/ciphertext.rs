@@ -1,6 +1,6 @@
-use num_bigint::BigInt;
+use rug::Integer;
 
 pub struct Ciphertext{
-   pub c0: Vec<BigInt>,
-   pub c1: Vec<BigInt>, 
+   pub c0: Vec<Integer>,
+   pub c1: Vec<Integer>, 
 } 

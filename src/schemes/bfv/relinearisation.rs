@@ -1,28 +1,28 @@
 use crate::math::ring::{ring::{add, mul, neg, scalar_mul}, ring_rand::{discrete_gaussian_random_element, uniform_random_element}};
 
 use super::{ciphertext::Ciphertext, public_key::PublicKey, secret_key::SecretKey};
-use num_bigint::BigInt;
+use rug::{ops::Pow, Complete, Integer};
 
 use rayon::prelude::*; 
 
 impl PublicKey{
-    pub (crate) fn gen_rlk(secret_key: &SecretKey) -> Vec<(Vec<BigInt>,Vec<BigInt>)>{
+    pub (crate) fn gen_rlk(secret_key: &SecretKey) -> Vec<(Vec<Integer>,Vec<Integer>)>{
         let p = &secret_key.params.p;
         let s = &secret_key.secret;
-        let s_squared = mul(&s, &s, p); 
+        let s_squared = mul(s, s, p); 
         let n = secret_key.params.n; 
 
 
-        let rp = p.sqrt();
+        let rp = &secret_key.params.rp; 
 
-        let mut rlk :Vec<(Vec<BigInt>, Vec<BigInt>)> = vec![]; 
+        let mut rlk :Vec<(Vec<Integer>, Vec<Integer>)> = vec![]; 
       
-        let l = 2;
+        let l = secret_key.params.l;
     
         for i in 0..=l{
             let a_i = uniform_random_element(p, n);
             let e_i = discrete_gaussian_random_element(secret_key.params.s, n); 
-               
+         
             rlk.push(
               (
                 add(
@@ -31,7 +31,7 @@ impl PublicKey{
                             &mul(&a_i,&s, p),
                         &e_i, p), 
                         p),
-                    &scalar_mul(&rp.pow(i), &s_squared, p), 
+                    &scalar_mul(&rp.pow(i as u32).complete(), &s_squared, p), 
                 p),     
                 a_i
               )  
@@ -41,21 +41,18 @@ impl PublicKey{
         rlk 
         
     }
-    pub(crate) fn relin(&self, c0: &Vec<BigInt>, c1: &Vec<BigInt> , c2: &Vec<BigInt>) -> Ciphertext{
+    pub(crate) fn relin(&self, c0: &Vec<Integer>, c1: &Vec<Integer> , c2: &Vec<Integer>) -> Ciphertext{
         let p = &self.params.p; 
-        let rp = p.sqrt();
-     
-        let l = 2; 
-
-
+        let rp = &self.params.rp; 
+        let l = self.params.l; 
        
-        let mut decomposition: Vec<Vec<BigInt>> = vec![Vec::new(); l+1];
+        let mut decomposition: Vec<Vec<Integer>> = vec![Vec::new(); l+1];
         
         let decomposed_ciphertext = c2.clone();    
     
         for i in 0..=l{
             for j in 0..decomposed_ciphertext.len(){
-                decomposition[i].push((&decomposed_ciphertext[j]/&rp.pow(i as u32))%&rp);
+                decomposition[i].push((&decomposed_ciphertext[j]/&rp.clone().pow(i as u32)).complete()%rp);
             }
         }
 

@@ -1,7 +1,7 @@
 use crate::math::ring::{ring::{add, mul, neg, scalar_mul}, ring_rand::{binary_random_element, discrete_gaussian_random_element, uniform_random_element}};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext, secret_key::SecretKey};
-use rug::Integer;
+use rug::{Complete, Integer};
 
 
 pub struct PublicKey{
@@ -42,7 +42,7 @@ impl PublicKey{
             &e1 
         ,&add(
             &mul(p0,&u, &self.params.p),
-            &scalar_mul(&delta, &pt.message, &self.params.p), 
+            &scalar_mul(&delta.complete(), &pt.message, &self.params.p), 
             &self.params.p
             ), 
             &self.params.p

@@ -1,4 +1,3 @@
-use num_bigint::BigInt; 
 use rand::Rng;
 use rug::Integer;
 
@@ -17,7 +16,7 @@ pub fn random_binary_vector(n: usize) -> Vec<Integer>{
 
 }
 
-pub fn scale(c: &Vec<BigInt>, p: &BigInt, t: &BigInt) -> Vec<BigInt>{
+pub fn scale(c: &Vec<Integer>, p: &Integer, t: &Integer) -> Vec<Integer>{
     scalar_div(p, 
     &scalar_mul_no_mod(t, &c)
     ,p)

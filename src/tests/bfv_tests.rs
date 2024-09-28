@@ -4,7 +4,7 @@ mod bfv_tests{
 
     use safhe_house::schemes::bfv::{bfv::BFV, plaintext::Plaintext};
     use safhe_house::schemes::bfv::params::PARAMS::*;
-    use num_bigint::BigInt;
+    use rug::Integer;
 
 
 
@@ -12,7 +12,7 @@ mod bfv_tests{
     fn encryption_equation_test(){
 
 
-        let message = vec![BigInt::from(251); 1024];
+        let message = vec![Integer::from(251); 1024];
 
   
         
@@ -31,10 +31,10 @@ mod bfv_tests{
 
     #[test]
     fn homomorphic_add_test(){
-        let m1 = vec![BigInt::from(17); 1024];
-        let m2 = vec![BigInt::from(411); 1024];
+        let m1 = vec![Integer::from(17); 1024];
+        let m2 = vec![Integer::from(411); 1024];
 
-        let clear_res = vec![BigInt::from(428); 1024];
+        let clear_res = vec![Integer::from(428); 1024];
 
 
         let (sk, pk) = BFV::gen_keys(RlweParams1); 
@@ -57,13 +57,13 @@ mod bfv_tests{
     fn homomorphic_mul_test(){
         let n = 2048; 
 
-        let mut m1 = vec![BigInt::from(0);n];
-        m1[0] = BigInt::from(5); 
-        let mut m2 = vec![BigInt::from(0);n];
-        m2[0] = BigInt::from(5); 
+        let mut m1 = vec![Integer::from(0);n];
+        m1[0] = Integer::from(5); 
+        let mut m2 = vec![Integer::from(0);n];
+        m2[0] = Integer::from(5); 
 
-        let mut clear_res = vec![BigInt::from(0); n];
-        clear_res[0] = BigInt::from(25);
+        let mut clear_res = vec![Integer::from(0); n];
+        clear_res[0] = Integer::from(25);
 
       
         let (sk, pk) = BFV::gen_keys(RlweParams2); 

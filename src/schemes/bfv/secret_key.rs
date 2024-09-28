@@ -1,9 +1,9 @@
 use crate::math::ring::{ring::{add, mul, scalar_div}, ring_no_mod::scalar_mul_no_mod, ring_rand::binary_random_element};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext};
-use num_bigint::BigInt;
+use rug::Integer;
 pub struct SecretKey{
-    pub(crate) secret: Vec<BigInt>,  
+    pub(crate) secret: Vec<Integer>,  
     pub (crate) params: Params,  
 }
 

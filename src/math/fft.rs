@@ -1,44 +1,44 @@
-use num_bigint::BigInt;
+use rug::{Complete, Integer};
 
 use crate::math::finite_field::reduce;
 
-pub fn fft(a: &Vec<BigInt> , n: usize, w: &BigInt, p: &BigInt) -> Vec<BigInt>{
+pub fn fft(a: &Vec<Integer> , n: usize, w: &Integer, p: &Integer) -> Vec<Integer>{
     assert!(n.is_power_of_two(), "n must be power of 2");
     if n == 1 {
         return a.to_vec(); 
     }
 
-    let a_0: Vec<BigInt> = a.iter()
+    let a_0: Vec<Integer> = a.iter()
     .step_by(2)
     .cloned()
     .collect();
     
-    let a_1: Vec<BigInt> = a.iter()
+    let a_1: Vec<Integer> = a.iter()
         .skip(1)
         .step_by(2)
         .cloned()
         .collect();
 
-    let w_squared = reduce(&(w*w),p);
+    let w_squared = reduce(&(w*w).complete(),p);
     let a_0_cap = fft(&a_0, n/2, &w_squared, p); 
     let a_1_cap = fft(&a_1, n/2, &w_squared, p);
 
-    let mut a_cap = vec![BigInt::from(0i32); n]; 
+    let mut a_cap = vec![Integer::from(0i32); n]; 
 
     for i in 0..n/2{
-        a_cap[i] = reduce(&(&a_0_cap[i] + &reduce(&(&w.modpow(&BigInt::from(i), p) * &a_1_cap[i]), p)),p);
-        a_cap[i+n/2] = reduce(&(&a_0_cap[i] + &reduce(&(&w.modpow(&BigInt::from(i+n/2), p) * &a_1_cap[i]), p)),p);
+        a_cap[i] = reduce(&(&a_0_cap[i] + &reduce(&(&w.clone().pow_mod(&Integer::from(i), p).expect("Cannot modpow") * &a_1_cap[i]).complete(), p)).complete(),p);
+        a_cap[i+n/2] = reduce(&(&a_0_cap[i] + &reduce(&(&w.clone().pow_mod(&Integer::from(i+n/2), p).expect("Cannot modpow") * &a_1_cap[i]).complete(), p)).complete(),p);
     }   
     a_cap 
 
 }
 
-pub fn ifft(a: &Vec<BigInt> , n: usize, w: &BigInt, p: &BigInt) -> Vec<BigInt>{
-    let w_inv = w.modinv(p).expect("No inverse for w mod p");
+pub fn ifft(a: &Vec<Integer> , n: usize, w: &Integer, p: &Integer) -> Vec<Integer>{
+    let w_inv = w.clone().invert(p).expect("No inverse for w mod p");
 
     let mut fft_output = fft(a, n, &w_inv, p); 
 
-    let n_inv = BigInt::from(n).modinv(p).expect("No inverse for n mod p");
+    let n_inv = Integer::from(n).invert(p).expect("No inverse for n mod p");
     
     fft_output.iter_mut().for_each(|e|{
         *e*= &n_inv; 

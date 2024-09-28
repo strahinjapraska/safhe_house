@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use num::Num;
 use lazy_static::lazy_static;
 use rug::Integer;
 
@@ -11,6 +10,8 @@ pub struct Params{
     pub (crate) n: usize, 
     pub (crate) p: Integer,  
     pub (crate) t: Integer,   
+    pub (crate) rp: Integer,
+    pub (crate) l: usize, 
 }
 
 pub enum PARAMS{
@@ -33,8 +34,10 @@ lazy_static!{
             Params {
                 s: 8.0,
                 n,
-                p,
+                p: p.clone(),
                 t: Integer::from(1024),
+                rp: p.clone().sqrt(),
+                l: 2
             },
             
         );
@@ -46,8 +49,10 @@ lazy_static!{
             Params { 
                 s: 8.0, 
                 n, 
-                p, 
+                p: p.clone(),
                 t: Integer::from(1024), 
+                rp: p.clone().sqrt(),
+                l: 2
             }
         );
     
@@ -59,8 +64,10 @@ lazy_static!{
             Params { 
                 s: 8.0, 
                 n, 
-                p, 
+                p: p.clone(), 
                 t: Integer::from(1024), 
+                rp: p.clone().sqrt(), 
+                l: 2
             }
         );
         m

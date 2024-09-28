@@ -1,5 +1,5 @@
-use num_bigint::BigInt;
+use rug::Integer;
 
 pub struct Plaintext{
-    pub message: Vec<BigInt>
+    pub message: Vec<Integer>
 }

@@ -1,7 +1,6 @@
-use crate::math::{ring::{ring::{add, scalar_div}, ring_no_mod::{add_no_mod, mul_no_mod, scalar_mul_no_mod}}, util::scale};
+use crate::math::{ring::{ring::add, ring_no_mod::{add_no_mod, mul_no_mod}}, util::scale};
 
 use super::{ciphertext::Ciphertext, public_key::PublicKey};
-use num_bigint::BigInt;
 
 impl PublicKey{
     pub fn add(&self, lhs: &Ciphertext, rhs: &Ciphertext) -> Ciphertext {

@@ -46,7 +46,7 @@ pub fn square_root_mod_p(n: &Integer , p: &Integer) -> Integer{
 
     let mut q = (p - Integer::from(1i32))/Integer::from(2i32); 
     let mut s = 1; 
-    while Integer::from(q%2) == Integer::from(0i32){
+    while Integer::from(&q%2) == Integer::from(0i32){
         q/=Integer::from(2i32); 
         s+=1; 
     }
