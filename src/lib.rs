@@ -12,7 +12,7 @@ pub mod schemes{
 }
 pub mod math{
     pub mod discrete_gaussian;
-    pub mod fft;  
+    pub mod ntt;
     pub mod finite_field; 
     pub mod ring{
         pub mod ring;  

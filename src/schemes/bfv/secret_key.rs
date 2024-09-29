@@ -24,7 +24,7 @@ impl SecretKey{
             scalar_div(&self.params.p, 
                 &scalar_mul_no_mod(&self.params.t, 
                     &add(c0, 
-                        &mul(c1, &self.secret, &self.params.p), 
+                        &mul(c1, &self.secret, &self.params.p, &self.params.w, &self.params.w_inv, &self.params.phi, &self.params.phi_inv),
                         &self.params.p)),
                          &self.params.t)
         }

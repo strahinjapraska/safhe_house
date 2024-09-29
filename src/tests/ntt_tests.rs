@@ -2,16 +2,16 @@
 mod fft_tests {
 
     use rug::Integer;
-    use safhe_house::math::fft::{fft, ifft};
+    use safhe_house::math::ntt::{ntt, intt};
 
     #[test]
-    fn fft_test() {
+    fn ntt_test() {
         let h = vec![Integer::from(5), Integer::from(6), Integer::from(7), Integer::from(8)];
         let n =4; 
         let p = &Integer::from(7681);
         let w = &Integer::from(3383);
         
-        let fft_res = fft(&h, n, &w, p);
+        let fft_res = ntt(&h, n, &w, p);
         assert_eq!(
             fft_res,
             vec![
@@ -24,13 +24,14 @@ mod fft_tests {
     }
 
     #[test]
-    fn ifft_test() {
+    fn intt_test() {
         let g = vec![Integer::from(1), Integer::from(2), Integer::from(3), Integer::from(4)];
         let n = 4;
         let w = Integer::from(3383);
         let p = Integer::from(7681);
+        let w_inv = w.clone().invert(&p).expect("Cannot get modular inverse");
 
-        let fft_result = fft(&g, n, &w.clone(), &p.clone());
+        let fft_result = ntt(&g, n, &w, &p);
         assert_eq!(
             fft_result,
             vec![
@@ -41,6 +42,6 @@ mod fft_tests {
             ]
         );
 
-        assert_eq!(ifft(&fft_result, n, &w, &p), g);
+        assert_eq!(intt(&fft_result, n, &w_inv, &p), g);
     }
 }

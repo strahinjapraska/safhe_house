@@ -2,6 +2,9 @@
 mod bfv_tests{
  
 
+
+    use std::time::Instant;
+
     use safhe_house::schemes::bfv::{bfv::BFV, plaintext::Plaintext};
     use safhe_house::schemes::bfv::params::PARAMS::*;
     use rug::Integer;
@@ -13,8 +16,6 @@ mod bfv_tests{
 
 
         let message = vec![Integer::from(251); 1024];
-
-  
         
         let (sk, pk) = BFV::gen_keys(RlweParams1);
 
@@ -65,15 +66,17 @@ mod bfv_tests{
         let mut clear_res = vec![Integer::from(0); n];
         clear_res[0] = Integer::from(25);
 
-      
-        let (sk, pk) = BFV::gen_keys(RlweParams2); 
-      
 
-        let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
+        let (sk, pk) = BFV::gen_keys(RlweParams2); 
+
+
+        let c1 = pk.encrypt(&Plaintext{message: m1.clone()});
         let c2 = pk.encrypt(&Plaintext{message: m2.clone()}); 
 
+
+        let time = Instant::now();
         let encrypted_res = pk.mul(&c1, &c2);
-    
+        println!("Mul: {:?}", time.elapsed());
 
         let decrypted_res = sk.decrypt(&encrypted_res); 
         

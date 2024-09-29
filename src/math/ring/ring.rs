@@ -1,19 +1,13 @@
-use rug::{ Complete, Integer};
 use rayon::prelude::*;
+use rug::{Complete, Integer};
 
-use crate::math::{fft::{fft, ifft}, finite_field::{modulo, primitive_nth_root_of_unity, reduce, square_root_mod_p}};
+use crate::math::{finite_field::{modulo, reduce}, ntt::{intt, ntt}};
 
 
-pub fn mul(a: &Vec<Integer>, b: &Vec<Integer>, p: &Integer) -> Vec<Integer>{
+pub fn mul(a: &Vec<Integer>, b: &Vec<Integer>, p: &Integer, w: &Integer, w_inv: &Integer, phi: &Integer, inv_phi: &Integer) -> Vec<Integer>{
     assert!(a.len() == b.len()); 
 
     let n = a.len();
-    let w = &primitive_nth_root_of_unity(p, n);
-
-
-    let phi = square_root_mod_p(w, p); 
-    
-    let inv_phi = phi.clone().invert(p).expect("No inverse for phi mod p");
 
     let mut a_cap = vec![Integer::from(0i32); a.len()];
     let mut b_cap = vec![Integer::from(0i32); b.len()];
@@ -34,8 +28,8 @@ pub fn mul(a: &Vec<Integer>, b: &Vec<Integer>, p: &Integer) -> Vec<Integer>{
         *b_cap_i = reduce(&(&b[i] * phi_i), p);
     });
 
-    a_cap = fft(&a_cap, n, &w, p); 
-    b_cap = fft(&b_cap, n, &w, p);
+    a_cap = ntt(&a_cap, n, &w, p);
+    b_cap = ntt(&b_cap, n, &w, p);
 
     let mut c : Vec<Integer>= a_cap
     .par_iter()
@@ -44,7 +38,7 @@ pub fn mul(a: &Vec<Integer>, b: &Vec<Integer>, p: &Integer) -> Vec<Integer>{
         reduce(&(a_val * b_val).complete(), p)
     }).collect(); 
 
-    c = ifft(&mut c, n, &w, p);
+    c = intt(&mut c, n, &w_inv, p);
 
     c
     .par_iter_mut()

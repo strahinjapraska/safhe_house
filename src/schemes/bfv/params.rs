@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use lazy_static::lazy_static;
 use rug::Integer;
-
+use crate::schemes::bfv::params::PARAMS::{RlweParams1, RlweParams2, RlweParams3};
 
 #[derive(Clone)]
 pub struct Params{
@@ -11,9 +11,24 @@ pub struct Params{
     pub (crate) p: Integer,  
     pub (crate) t: Integer,   
     pub (crate) rp: Integer,
-    pub (crate) l: usize, 
+    pub (crate) l: usize,
+    pub (crate) w: Integer,
+    pub (crate) phi: Integer,
+    pub (crate) w_inv: Integer,
+    pub (crate) phi_inv: Integer,
 }
 
+impl Params{
+    pub fn p(&self) -> Integer{
+        self.p.clone()
+    }
+
+    pub fn n(&self) -> usize{
+        self.n.clone()
+    }
+}
+
+#[derive(Clone, Debug)]
 pub enum PARAMS{
     /// D = 1, log(p) = 30, t = 1024, n = 1024
     RlweParams1, 
@@ -21,6 +36,13 @@ pub enum PARAMS{
     RlweParams2,
     /// D = 3, log(p) = 91, t = 1024, n = 4096 
     RlweParams3
+}
+impl PARAMS{
+    pub fn all() -> &'static [PARAMS]{
+        &[
+         RlweParams1, RlweParams2, RlweParams3
+        ]
+    }
 }
 
 lazy_static!{
@@ -37,7 +59,11 @@ lazy_static!{
                 p: p.clone(),
                 t: Integer::from(1024),
                 rp: p.clone().sqrt(),
-                l: 2
+                l: 2,
+                w: Integer::from_str_radix("591137462", 10).expect("Cannot convert"),
+                w_inv: Integer::from_str_radix("541153008", 10).expect("Cannot convert"),
+                phi: Integer::from_str_radix("248390058", 10).expect("Cannot convert"),
+                phi_inv: Integer::from_str_radix("457488391", 10).expect("Cannot convert"),
             },
             
         );
@@ -52,7 +78,11 @@ lazy_static!{
                 p: p.clone(),
                 t: Integer::from(1024), 
                 rp: p.clone().sqrt(),
-                l: 2
+                l: 2,
+                w: Integer::from_str_radix("65170666404517193", 10).expect("Cannot convert"),
+                w_inv: Integer::from_str_radix("38857149756300966", 10).expect("Cannot convert"),
+                phi: Integer::from_str_radix("43860450731918522", 10).expect("Cannot convert"),
+                phi_inv: Integer::from_str_radix("136483537181756498", 10).expect("Cannot convert"),
             }
         );
     
@@ -67,7 +97,11 @@ lazy_static!{
                 p: p.clone(), 
                 t: Integer::from(1024), 
                 rp: p.clone().sqrt(), 
-                l: 2
+                l: 2,
+                w: Integer::from_str_radix("65170666404517193", 10).expect("Cannot convert"),
+                w_inv: Integer::from_str_radix("38857149756300966", 10).expect("Cannot convert"),
+                phi: Integer::from_str_radix("43860450731918522", 10).expect("Cannot convert"),
+                phi_inv: Integer::from_str_radix("136483537181756498", 10).expect("Cannot convert"),
             }
         );
         m

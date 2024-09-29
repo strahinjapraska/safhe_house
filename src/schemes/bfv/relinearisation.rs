@@ -7,17 +7,22 @@ use rayon::prelude::*;
 
 impl PublicKey{
     pub (crate) fn gen_rlk(secret_key: &SecretKey) -> Vec<(Vec<Integer>,Vec<Integer>)>{
-        let p = &secret_key.params.p;
+        let (p, w, w_inv, phi, phi_inv, n, rp, l) = (
+            &secret_key.params.p,
+            &secret_key.params.w,
+            &secret_key.params.w_inv,
+            &secret_key.params.phi,
+            &secret_key.params.phi_inv,
+            secret_key.params.n,
+            &secret_key.params.rp,
+            secret_key.params.l
+        );
+
         let s = &secret_key.secret;
-        let s_squared = mul(s, s, p); 
-        let n = secret_key.params.n; 
-
-
-        let rp = &secret_key.params.rp; 
+        let s_squared = mul(s, s, p, w, w_inv, phi, phi_inv);
 
         let mut rlk :Vec<(Vec<Integer>, Vec<Integer>)> = vec![]; 
-      
-        let l = secret_key.params.l;
+
     
         for i in 0..=l{
             let a_i = uniform_random_element(p, n);
@@ -28,7 +33,7 @@ impl PublicKey{
                 add(
                     &neg(
                         &add(
-                            &mul(&a_i,&s, p),
+                            &mul(&a_i,&s, p, w, w_inv, phi, phi_inv),
                         &e_i, p), 
                         p),
                     &scalar_mul(&rp.pow(i as u32).complete(), &s_squared, p), 
@@ -42,27 +47,36 @@ impl PublicKey{
         
     }
     pub(crate) fn relin(&self, c0: &Vec<Integer>, c1: &Vec<Integer> , c2: &Vec<Integer>) -> Ciphertext{
-        let p = &self.params.p; 
-        let rp = &self.params.rp; 
-        let l = self.params.l; 
+        let (p, w, w_inv, phi, phi_inv,  rp, l) = (
+            &self.params.p,
+            &self.params.w,
+            &self.params.w_inv,
+            &self.params.phi,
+            &self.params.phi_inv,
+            &self.params.rp,
+            self.params.l
+        );
        
-        let mut decomposition: Vec<Vec<Integer>> = vec![Vec::new(); l+1];
-        
-        let decomposed_ciphertext = c2.clone();    
-    
-        for i in 0..=l{
-            for j in 0..decomposed_ciphertext.len(){
-                decomposition[i].push((&decomposed_ciphertext[j]/&rp.clone().pow(i as u32)).complete()%rp);
+        let mut decomposition: Vec<Vec<Integer>> = vec![Vec::new(); l + 1];
+        decomposition.par_iter_mut().enumerate().for_each(|(i, vec)| {
+            for j in 0..c2.len() {
+                vec.push((&c2[j] / &rp.clone().pow(i as u32)).complete() % rp);
             }
-        }
+        });
 
-        let mut s1 = mul(&self.rlk[0].0, &decomposition[0], p);
-        let mut s2 = mul(&self.rlk[0].1, &decomposition[0], p);
-        for i in 1..=l{
-            s1 = add(&mul(&self.rlk[i].0, &decomposition[i], p), &s1, p); 
-            s2 = add(&mul(&self.rlk[i].1, &decomposition[i], p), &s2, p); 
-        }
+        let s1 = (0..=l)
+        .into_par_iter()  // Parallel iterator
+        .map(|i| mul(&self.rlk[i].0, &decomposition[i], p, w, w_inv, phi, phi_inv))
+        .reduce(|| vec![Integer::ZERO; self.params.n], |acc, val| add(&acc, &val, p)); 
+    
+        
+        let s2 = (0..=l)
+        .into_par_iter()  // Parallel iterator
+        .map(|i| mul(&self.rlk[i].1, &decomposition[i], p, w, w_inv, phi, phi_inv))
+        .reduce(|| vec![Integer::ZERO; self.params.n], |acc, val| add(&acc, &val, p)); 
+        
+          
 
-        Ciphertext{c0: add(c0, &s1, p), c1: add(c1, &s2, p)}
+        Ciphertext{c0: add(c0, &s1, p), c1: add(c1, &s2, p)} 
     }
 }

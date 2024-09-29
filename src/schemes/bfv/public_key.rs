@@ -19,7 +19,7 @@ impl PublicKey{
         let e = discrete_gaussian_random_element(params.s, params.n);
         
       
-        let b = neg(&add(&mul(&a, &s.secret, &params.p), &e, &params.p), &params.p); 
+        let b = neg(&add(&mul(&a, &s.secret, &params.p, &params.w, &params.w_inv, &params.phi, &params.phi_inv), &e, &params.p), &params.p);
       
         let rlk  = PublicKey::gen_rlk(&s);
 
@@ -41,13 +41,13 @@ impl PublicKey{
         let c0 = add(
             &e1 
         ,&add(
-            &mul(p0,&u, &self.params.p),
+            &mul(p0,&u, &self.params.p, &self.params.w, &self.params.w_inv, &self.params.phi, &self.params.phi_inv),
             &scalar_mul(&delta.complete(), &pt.message, &self.params.p), 
             &self.params.p
             ), 
             &self.params.p
         );
-        let c1 =  add(&e2, &mul(&p1, &u, &self.params.p), &self.params.p); 
+        let c1 =  add(&e2, &mul(&p1, &u, &self.params.p, &self.params.w, &self.params.w_inv, &self.params.phi, &self.params.phi_inv), &self.params.p);
         
         Ciphertext{c0, c1}
     }
