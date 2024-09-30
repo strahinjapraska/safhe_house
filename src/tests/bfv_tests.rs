@@ -98,5 +98,28 @@ mod bfv_tests{
 
         assert_eq!(clear_res, decrypted_res.message);
     }
+
+    #[test]
+    fn homomorphic_sub_test(){
+        let m1 = vec![Integer::from(8); 1024];
+        let m2 = vec![Integer::from(411); 1024];
+
+        let clear_res = vec![Integer::from(-403); 1024];
+
+
+        let (sk, pk) = BFV::gen_keys(RlweParams1); 
+
+      
+        let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
+        
+
+        let c2 = pk.encrypt(&Plaintext { message: m2.clone()}); 
+
+        let encrypted_res = pk.sub(&c1, &c2);
+       
+        let decrypted_res = sk.decrypt(&encrypted_res); 
+
+        assert_eq!(clear_res, decrypted_res.message);
+    }
     
 }

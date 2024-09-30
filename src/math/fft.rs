@@ -4,7 +4,6 @@ use rug::ops::CompleteRound;
 use rug::Complex;
 use rug::Float; 
 
-use rayon::prelude::*;
 use rug::Integer; 
 
 #[derive(PartialEq, Clone)]

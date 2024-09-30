@@ -47,6 +47,11 @@ impl PublicKey{
         Ciphertext{c0, c1}
     }
 
+    pub fn sub(&self, lhs: &Ciphertext, rhs: &Ciphertext) -> Ciphertext {
+        let neg_rhs = self.neg(rhs); 
+        self.add(lhs, &neg_rhs)
+    }
+
     
 }
 
