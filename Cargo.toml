@@ -22,7 +22,7 @@ name = "math_tests"
 path = "src/tests/finite_field_tests.rs"
 
 [[test]]
-name = "fft_tests" 
+name = "ntt_tests" 
 path = "src/tests/ntt_tests.rs"
 
 [[test]]
@@ -33,9 +33,15 @@ path = "src/tests/ring_tests.rs"
 name = "karatsuba_tests" 
 path = "src/tests/karatsuba_tests.rs"
 
+[[test]]
+name = "fft_tests"
+path = "src/tests/fft_tests.rs"
+
+
 [[bin]]
 name = "param_generation"
 path = "src/bin/param_gen.rs"
+
 
 [profile.release]
 debug = true 

@@ -2,7 +2,7 @@ use safhe_house::math::finite_field::{primitive_nth_root_of_unity, square_root_m
 use safhe_house::schemes::bfv::params::{get_params, PARAMS};
 
 fn main(){
-    let params = PARAMS::all();
+    let params = PARAMS::get_all();
     for p in params{
         let param = get_params(p.clone());
         let w = primitive_nth_root_of_unity(&param.p(), param.n());

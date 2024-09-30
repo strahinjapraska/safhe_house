@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod fft_tests {
+mod ntt_tests {
 
     use rug::Integer;
     use safhe_house::math::ntt::{ntt, intt};

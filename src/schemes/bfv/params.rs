@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, f64::consts::PI};
 
 use lazy_static::lazy_static;
-use rug::Integer;
+use rug::{Complex, Integer, Float};
 use crate::schemes::bfv::params::PARAMS::{RlweParams1, RlweParams2, RlweParams3};
 
 #[derive(Clone)]
@@ -16,6 +16,7 @@ pub struct Params{
     pub (crate) phi: Integer,
     pub (crate) w_inv: Integer,
     pub (crate) phi_inv: Integer,
+    pub (crate) precision: usize, 
 }
 
 impl Params{
@@ -38,13 +39,55 @@ pub enum PARAMS{
     RlweParams3
 }
 impl PARAMS{
-    pub fn all() -> &'static [PARAMS]{
+    pub fn get_all() -> &'static [PARAMS]{
         &[
          RlweParams1, RlweParams2, RlweParams3
         ]
     }
 }
 
+fn precompute_omegas(n: usize, precision: usize) -> Vec<Complex>{
+    let mut omegas = vec![]; 
+    let precision_u32 = precision.try_into().unwrap();
+    let mut n_clone = n.clone(); 
+
+    let angle = Float::with_val(precision_u32, 2.0*PI/(n_clone as f64)); 
+    let cos = Float::with_val(precision_u32, angle.clone().cos()); 
+    let sin = Float::with_val(precision_u32, angle.sin());
+    let w_n = Complex::with_val((precision_u32, precision_u32), (cos, sin)); 
+    omegas.push(w_n);
+
+    loop{   
+        n_clone<<=1; 
+
+        let angle = Float::with_val(precision_u32, 2.0*PI/(n_clone as f64)); 
+        let cos = Float::with_val(precision_u32, angle.clone().cos()); 
+        let sin = Float::with_val(precision_u32, angle.sin());
+        let w_n = Complex::with_val((precision_u32, precision_u32), (cos, sin)); 
+        omegas.push(w_n);
+        
+        if n_clone == 1{
+            break; 
+        }
+    }
+    omegas 
+}
+
+lazy_static!{
+    static ref OMEGAS: HashMap<&'static str, Vec<Complex>> = {
+        let mut m = HashMap::new();
+        m.insert("1024", 
+            precompute_omegas(1024, 64)
+        );
+        m.insert("1024", 
+        precompute_omegas(2048, 128)
+        );
+        m.insert("1024", 
+        precompute_omegas(8192, 256)
+        );
+        m
+    };
+}
 lazy_static!{
     static ref PARAMSETS: HashMap<&'static str, Params> = {
         let mut m = HashMap::new();
@@ -63,7 +106,8 @@ lazy_static!{
                 w: Integer::from_str_radix("591137462", 10).expect("Cannot convert"),
                 w_inv: Integer::from_str_radix("541153008", 10).expect("Cannot convert"),
                 phi: Integer::from_str_radix("248390058", 10).expect("Cannot convert"),
-                phi_inv: Integer::from_str_radix("457488391", 10).expect("Cannot convert"),
+                phi_inv: Integer::from_str_radix("457488391", 10).expect("Cannot convert"), 
+                precision: 64,
             },
             
         );
@@ -83,6 +127,7 @@ lazy_static!{
                 w_inv: Integer::from_str_radix("38857149756300966", 10).expect("Cannot convert"),
                 phi: Integer::from_str_radix("43860450731918522", 10).expect("Cannot convert"),
                 phi_inv: Integer::from_str_radix("136483537181756498", 10).expect("Cannot convert"),
+                precision: 128, 
             }
         );
     
@@ -102,6 +147,7 @@ lazy_static!{
                 w_inv: Integer::from_str_radix("38857149756300966", 10).expect("Cannot convert"),
                 phi: Integer::from_str_radix("43860450731918522", 10).expect("Cannot convert"),
                 phi_inv: Integer::from_str_radix("136483537181756498", 10).expect("Cannot convert"),
+                precision: 256,
             }
         );
         m

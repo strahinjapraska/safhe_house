@@ -18,3 +18,8 @@ impl BFV{
         (sk, pk)
     }
 }
+
+pub enum MODE{
+    SHE, 
+    FHE 
+}

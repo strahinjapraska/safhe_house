@@ -13,6 +13,7 @@ pub mod schemes{
 pub mod math{
     pub mod discrete_gaussian;
     pub mod ntt;
+    pub mod fft; 
     pub mod finite_field; 
     pub mod ring{
         pub mod ring;  
@@ -20,7 +21,7 @@ pub mod math{
         pub mod ring_no_mod; 
     }
     pub mod util; 
-    pub mod karatsuba; 
+    pub mod karatsuba;  
 }
 
 pub mod tests{
