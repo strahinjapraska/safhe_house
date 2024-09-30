@@ -1,4 +1,4 @@
-use crate::math::ring::{ring::{add, mul, neg, scalar_mul}, ring_rand::{discrete_gaussian_random_element, uniform_random_element}};
+use crate::math::ring::{{add, mul, neg, scalar_mul}, {discrete_gaussian_random_element, uniform_random_element}};
 
 use super::{ciphertext::Ciphertext, public_key::PublicKey, secret_key::SecretKey};
 use rug::{ops::Pow, Complete, Integer};

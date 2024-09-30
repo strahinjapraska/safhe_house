@@ -1,7 +1,8 @@
 use rand::Rng;
 use rug::Integer;
 
-use super::ring::{ring::scalar_div, ring_no_mod::scalar_mul_no_mod};
+use super::ring::{scalar_div, scalar_mul_no_mod};
+
 
 pub fn random_binary_vector(n: usize) -> Vec<Integer>{
 

@@ -4,7 +4,6 @@ mod bfv_tests{
 
 
     use std::time::Instant;
-
     use safhe_house::schemes::bfv::{bfv::BFV, plaintext::Plaintext};
     use safhe_house::schemes::bfv::params::PARAMS::*;
     use rug::Integer;
@@ -32,10 +31,10 @@ mod bfv_tests{
 
     #[test]
     fn homomorphic_add_test(){
-        let m1 = vec![Integer::from(17); 1024];
+        let m1 = vec![Integer::from(-8); 1024];
         let m2 = vec![Integer::from(411); 1024];
 
-        let clear_res = vec![Integer::from(428); 1024];
+        let clear_res = vec![Integer::from(403); 1024];
 
 
         let (sk, pk) = BFV::gen_keys(RlweParams1); 
@@ -82,4 +81,22 @@ mod bfv_tests{
         
         assert_eq!(clear_res, decrypted_res.message);
     }
+
+    #[test]
+    fn homomorphic_neg_test(){
+        let m1 = vec![Integer::from(-17); 1024];
+
+        let clear_res = vec![Integer::from(17); 1024];
+
+        let (sk, pk) = BFV::gen_keys(RlweParams1); 
+
+        let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
+        
+        let encrypted_res = pk.neg(&c1);
+       
+        let decrypted_res = sk.decrypt(&encrypted_res); 
+
+        assert_eq!(clear_res, decrypted_res.message);
+    }
+    
 }

@@ -2,8 +2,8 @@
 mod ring_tests {
     use rug::Integer;
     use safhe_house::math::finite_field::{primitive_nth_root_of_unity, square_root_mod_p};
-    use safhe_house::math::ring::ring_no_mod::PolyMulAlgorithm;
-    use safhe_house::math::ring::{ring::mul, ring_no_mod::mul_no_mod};
+    use safhe_house::math::ring::PolyMulAlgorithm;
+    use safhe_house::math::ring::{mul, mul_no_mod};
 
     #[test]
     fn ring_mul_test() {

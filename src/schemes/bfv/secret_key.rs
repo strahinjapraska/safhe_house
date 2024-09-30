@@ -1,4 +1,4 @@
-use crate::math::ring::{ring::{add, mul, scalar_div}, ring_no_mod::scalar_mul_no_mod, ring_rand::binary_random_element};
+use crate::math::ring::{{add, mul, scalar_div}, scalar_mul_no_mod, binary_random_element};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext};
 use rug::Integer;

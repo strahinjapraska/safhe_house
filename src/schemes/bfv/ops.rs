@@ -1,7 +1,7 @@
-use crate::math::{ring::{ring::add, ring_no_mod::{add_no_mod, mul_no_mod, PolyMulAlgorithm}}, util::scale};
-
 use rayon::prelude::*;
 use rug::Integer; 
+use crate::math::{ring::{add, add_no_mod, mul_no_mod, neg_no_mod, PolyMulAlgorithm}, util::scale};
+
 use super::{ciphertext::Ciphertext, public_key::PublicKey};
 
 impl PublicKey{
@@ -38,5 +38,15 @@ impl PublicKey{
             &scaled_res[0], &scaled_res[1], &scaled_res[2]
         )
     }
+
+    pub fn neg(&self, c: &Ciphertext) -> Ciphertext {
+        let (c0, c1) = rayon::join(
+     || neg_no_mod(&c.c0), 
+     || neg_no_mod(&c.c1)
+        ); 
+        Ciphertext{c0, c1}
+    }
+
+    
 }
 

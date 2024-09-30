@@ -1,14 +1,14 @@
-use crate::math::ring::{ring::{add, mul, neg, scalar_mul}, ring_rand::{binary_random_element, discrete_gaussian_random_element, uniform_random_element}};
+use crate::math::ring::{{add, mul, neg, scalar_mul},{binary_random_element, discrete_gaussian_random_element, uniform_random_element}};
 
 use super::{ciphertext::Ciphertext, params::Params, plaintext::Plaintext, secret_key::SecretKey};
 use rug::{Complete, Integer};
 
 
 pub struct PublicKey{
-    a: Vec<Integer>, 
-    b: Vec<Integer>, 
+    pub (crate) a: Vec<Integer>, 
+    pub (crate) b: Vec<Integer>, 
     pub(crate) params: Params, 
-    pub(crate) rlk: Vec<(Vec<Integer>, Vec<Integer>)>
+    pub(crate) rlk: Vec<(Vec<Integer>, Vec<Integer>)>,
 }
 
 impl PublicKey{
