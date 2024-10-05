@@ -2,7 +2,7 @@
 mod ntt_tests {
 
     use rug::Integer;
-    use safhe_house::math::ntt::{ntt, intt};
+    use safhe_house::math::polymul::ntt::{ntt, intt};
 
     #[test]
     fn ntt_test() {

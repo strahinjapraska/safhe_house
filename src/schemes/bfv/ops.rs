@@ -22,7 +22,7 @@ impl PublicKey{
             (lhs.c1.clone(), rhs.c1.clone()),
         ]
         .into_par_iter() 
-        .map(|(a, b)| mul_no_mod(&a, &b, self.params.n, PolyMulAlgorithm::Fft, self.params.precision))
+        .map(|(a, b)| mul_no_mod(&a, &b, self.params.n, PolyMulAlgorithm::Karatsuba, self.params.precision))
         .collect();   
         
         res[1] = add_no_mod(&res[1], &res[2]); 
@@ -52,6 +52,6 @@ impl PublicKey{
         self.add(lhs, &neg_rhs)
     }
 
-    
+
 }
 

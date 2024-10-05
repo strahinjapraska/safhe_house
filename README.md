@@ -1,7 +1,9 @@
 FHE in Rust 
 
-Python `maturin` is needed to run python scripts.
+Python `maturin` is needed to run python scripts for discrete gaussian plots.
 
-Now run `maturin build` 
+Run `maturin build`.
 
-Then you will get the `.whl` generated just call `pip install` with it's path 
+Then you will get the `.whl` generated just call `pip install` with it's path.
+
+You can then import discrete gaussian from `safhe_house` in python. 

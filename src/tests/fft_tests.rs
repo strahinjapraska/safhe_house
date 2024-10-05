@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod fft_tests{
     use rug::Integer;
-    use safhe_house::math::fft::fft_mul;
+    use safhe_house::math::polymul::fft::fft_mul;
 
 
     

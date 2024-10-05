@@ -15,6 +15,8 @@ pub enum FftMode{
 pub fn fft(a: &Vec<Complex>, n: usize, precision: usize, mode: FftMode) -> Vec<Complex>{
     assert!(n.is_power_of_two(), "n must be power of 2");
 
+    
+
     if n == 1 {
         return a.to_vec(); 
     }
@@ -67,17 +69,17 @@ pub fn fft_mul(p: &Vec<Integer> , q: &Vec<Integer>, precision: usize) -> Vec<Int
     let mut p_cap: Vec<Complex> = p
     .iter()
     .map(|p_val|{ 
-        Complex::with_val(precision_u32, p_val)
+        Complex::with_val((precision_u32, precision_u32), (p_val, 0.0))
     }).collect(); 
 
     let mut q_cap: Vec<Complex> = q
     .iter()
     .map(|q_val|{ 
-        Complex::with_val(precision_u32, q_val)
+        Complex::with_val((precision_u32, precision_u32), (q_val, 0.0))
     }).collect(); 
 
-    p_cap.resize(2*n, Complex::with_val(precision_u32, 0.0f32));
-    q_cap.resize(2*n, Complex::with_val(precision_u32, 0.0f32));
+    p_cap.resize(2*n, Complex::with_val((precision_u32, precision_u32), (0.0, 0.0)));
+    q_cap.resize(2*n, Complex::with_val((precision_u32, precision_u32), (0.0, 0.0)));
   
     p_cap = fft(&p_cap, 2*n, precision, FftMode::FFT);
     q_cap = fft(&q_cap, 2*n, precision, FftMode::FFT);
@@ -91,7 +93,7 @@ pub fn fft_mul(p: &Vec<Integer> , q: &Vec<Integer>, precision: usize) -> Vec<Int
 
     c = fft(&c, 2*n, precision, FftMode::IFFT); 
 
-    let n_inv = Complex::with_val(precision_u32, 1.0/(2*n) as f32); 
+    let n_inv = Complex::with_val((precision_u32, precision_u32), (1.0/(2*n) as f32, 0.0)); 
     c.iter_mut().for_each(|x| {
         *x = (&*x * &n_inv).complete((precision_u32, precision_u32));
     });
