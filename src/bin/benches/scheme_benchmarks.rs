@@ -1,11 +1,15 @@
 use std::error::Error;
 use std::fs::File;
 use std::path::Path;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use csv::Writer;
+use rug::Integer;
+use safhe_house::schemes::bfv::bfv::BFV;
 use safhe_house::schemes::bfv::params::{get_params, PARAMS};
-use safhe_house::math::ring::{mul_no_mod, uniform_random_element, PolyMulAlgorithm};
+use safhe_house::math::ring::discrete_gaussian_random_element;
+use safhe_house::schemes::bfv::plaintext::Plaintext;
+use PARAMS::*;
 
 fn run_benchmarks_write_to_file() -> Result<(), Box<dyn Error>>{
     let params = [
@@ -21,11 +25,41 @@ fn run_benchmarks_write_to_file() -> Result<(), Box<dyn Error>>{
         
         let param = get_params(p.clone());
 
-        let time = Instant::now(); 
+        let mut m1 = vec![Integer::from(0);param.n()];
+        m1[0] = Integer::from(5); 
+        let mut m2 = vec![Integer::from(0);param.n()];
+        m2[0] = Integer::from(5); 
+
+        let time = Instant::now();
+        let _ = discrete_gaussian_random_element(8.0, param.n());
         let elapsed1 = time.elapsed();
 
-        writer.write_record(&[])?;  
-        let _= writer.flush();   
+        let time = Instant::now();
+        let (sk, pk) = BFV::gen_keys(p); 
+        let elapsed2 = time.elapsed();
+
+        let time = Instant::now();
+        let c1 = pk.encrypt(&Plaintext{message: m1.clone()});
+        let elapsed3 = time.elapsed();
+
+        let c2 = pk.encrypt(&Plaintext{message: m2.clone()}); 
+
+        let time = Instant::now();
+        let _ = pk.add(&c1, &c2);
+        let elapsed4 = time.elapsed();
+
+        let time = Instant::now();
+        let encrypted_res = pk.mul(&c1, &c2);
+        let elapsed5 = time.elapsed();
+
+        let time = Instant::now();
+        let _ = sk.decrypt(&encrypted_res); 
+        let elapsed6 = time.elapsed();
+
+ 
+        
+        writer.write_record(&[elapsed1.as_millis().to_string(), elapsed2.as_millis().to_string(), elapsed3.as_millis().to_string(), elapsed4.as_millis().to_string(),elapsed5.as_millis().to_string(),elapsed6.as_millis().to_string()])?;  
+        let _= writer.flush(); 
         
     }
   

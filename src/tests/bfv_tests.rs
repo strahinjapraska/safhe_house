@@ -7,8 +7,7 @@ mod bfv_tests{
     #[test]
     fn encryption_equation_test(){
 
-
-        let message = vec![Integer::from(251); 1024];
+ let message = vec![Integer::from(251); 1024];
         
         let (sk, pk) = BFV::gen_keys(RlweParams1);
 
@@ -30,11 +29,8 @@ mod bfv_tests{
 
         let clear_res = vec![Integer::from(403); 1024];
 
-
         let (sk, pk) = BFV::gen_keys(RlweParams1); 
 
-        
-      
         let c1 = pk.encrypt(&Plaintext{message: m1.clone()}); 
         
 

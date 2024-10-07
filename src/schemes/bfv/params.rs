@@ -31,6 +31,19 @@ impl Params{
     pub fn prec(&self) -> usize{
         self.precision.clone()
     }
+
+    pub fn w(&self) -> Integer{
+        self.w.clone()
+    }
+    pub fn w_inv(&self) -> Integer{
+        self.w_inv.clone()
+    }
+    pub fn phi(&self) -> Integer{
+        self.phi.clone()
+    }
+    pub fn phi_inv(&self) -> Integer{
+        self.phi_inv.clone()   
+    }
 }
 
 #[derive(Clone, Debug)]
