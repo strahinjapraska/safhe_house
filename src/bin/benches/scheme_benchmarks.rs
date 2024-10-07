@@ -52,13 +52,23 @@ fn run_benchmarks_write_to_file() -> Result<(), Box<dyn Error>>{
         let encrypted_res = pk.mul(&c1, &c2);
         let elapsed5 = time.elapsed();
 
+
+        let time = Instant::now();
+        let _ = pk.sub(&c1, &c2);
+        let elapsed6 = time.elapsed();
+
+        let time = Instant::now();
+        let _ = pk.neg(&c1);
+        let elapsed7 = time.elapsed();
+
         let time = Instant::now();
         let _ = sk.decrypt(&encrypted_res); 
-        let elapsed6 = time.elapsed();
+        let elapsed8 = time.elapsed();
 
  
         
-        writer.write_record(&[elapsed1.as_millis().to_string(), elapsed2.as_millis().to_string(), elapsed3.as_millis().to_string(), elapsed4.as_millis().to_string(),elapsed5.as_millis().to_string(),elapsed6.as_millis().to_string()])?;  
+        writer.write_record(&[elapsed1.as_millis().to_string(), elapsed2.as_millis().to_string(), elapsed3.as_millis().to_string(), elapsed4.as_micros().to_string(),
+        elapsed5.as_millis().to_string(),elapsed6.as_micros().to_string(),elapsed7.as_micros().to_string(), elapsed8.as_millis().to_string()])?;  
         let _= writer.flush(); 
         
     }
